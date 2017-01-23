@@ -3,10 +3,10 @@ document.addEventListener('DOMContentLoaded', startGame)
 // Define your `board` object here!
 var board = {
   cells:[
-          {row:1, col:1, isMine:false, hidden:true},{row:1, col:2, isMine:false, hidden:true},{row:1, col:3, isMine:false, hidden:true},{row:1, col:4, isMine:false, hidden:true},
-          {row:2, col:1, isMine:false, hidden:true},{row:2, col:2, isMine:true, hidden:true},{row:2, col:3, isMine:false, hidden:true},{row:2, col:4, isMine:false, hidden:true},
-          {row:3, col:1, isMine:false, hidden:true},{row:3, col:2, isMine:false, hidden:true},{row:3, col:3, isMine:true, hidden:true},{row:3, col:4, isMine:false, hidden:true},
-          {row:4, col:1, isMine:false, hidden:true},{row:4, col:2, isMine:false, hidden:true},{row:4, col:3, isMine:false, hidden:true},{row:4, col:4, isMine:false, hidden:true}
+          {row:1, col:1, isMine:true, hidden:true},{row:1, col:2, isMine:false, hidden:true},{row:1, col:3, isMine:false, hidden:true},{row:1, col:4, isMine:false, hidden:true},
+          {row:2, col:1, isMine:false, hidden:true},{row:2, col:2, isMine:false, hidden:true},{row:2, col:3, isMine:false, hidden:true},{row:2, col:4, isMine:false, hidden:true},
+          {row:3, col:1, isMine:false, hidden:true},{row:3, col:2, isMine:false, hidden:true},{row:3, col:3, isMine:false, hidden:true},{row:3, col:4, isMine:true, hidden:true},
+          {row:4, col:1, isMine:false, hidden:true},{row:4, col:2, isMine:false, hidden:true},{row:4, col:3, isMine:true, hidden:true},{row:4, col:4, isMine:false, hidden:true}
         ]
 }
 
@@ -45,16 +45,23 @@ function checkForWin () {
   }
 
   //Function that counts how many mines have been found. If a cell is a mine and is marked, then the minesFound variable increases.
+
+    var minesFound = 0;
+    var falseMine = 0;
+
   function markedMines(){
-      var minesFound = 0;
       for (var k=0; k < board.cells.length; k++){
         if( (board.cells[k].isMine === true) && (board.cells[k].isMarked === true) ){
           minesFound += 1;
         }
+        //if the user flags a cell that doesn't contain a mine, then this is counted a falseMine.
+        if( (board.cells[k].isMine === false) && (board.cells[k].isMarked === true) ){
+          falseMine += 1;
+        }
       }
 
-      //if the number of minesFound equals the numer of mines, then the user wins
-      if (minesFound == numberOfMines){
+      //if the number of minesFound equals the numer of mines, and the number of falseMine's equal 0 then the user wins.
+      if ( (minesFound == numberOfMines) && (falseMine == 0) ){
         lib.displayMessage('You win!')
       }
   }
@@ -64,13 +71,13 @@ function checkForWin () {
     var winningNumber = (board.cells.length - numberOfMines);
     var numberOfVisable = 0;
     for (var k=0; k < board.cells.length; k++){
-      if( (board.cells[k].isMine != true) && (board.cells[k].hidden === false) ){
+      if( (board.cells[k].isMine == false) && (board.cells[k].hidden === false) ){
         numberOfVisable += 1;
       }
     }
 
-    if (numberOfVisable == winningNumber){
-      lib.displayMessage('You win!')
+    if ( (numberOfVisable == winningNumber) && (minesFound == numberOfMines) ) {
+        lib.displayMessage('You win!')
     }
 
   }
