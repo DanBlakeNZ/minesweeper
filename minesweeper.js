@@ -32,59 +32,59 @@ function startGame () {
 // 2. Are all of the mines marked?
 function checkForWin () {
 
-  //variable that holds the number of mines
   var numberOfMines = 0;
+  var minesFound = 0;
+  var falseMines =0;
+  var visableCells = 0;
 
-  //function that counts the number of mines on the board and returns it to the numberOfMines variable.
-  function getNumberOfMines(){
-      for (var k=0; k < board.cells.length; k++){
-        if(board.cells[k].isMine === true){
-          numberOfMines += 1;
-        }
+  // Counts the number of mines on the board
+  function mineCounter(){
+    for (var i=0; i <  board.cells.length; i++){
+      if (board.cells[i].isMine === true){
+        numberOfMines +=1;
       }
+    }
   }
 
-  //Function that counts how many mines have been found. If a cell is a mine and is marked, then the minesFound variable increases.
-
-    var minesFound = 0;
-    var falseMine = 0;
-
-  function markedMines(){
-      for (var k=0; k < board.cells.length; k++){
-        if( (board.cells[k].isMine === true) && (board.cells[k].isMarked === true) ){
+  // Counts the number of mines that are successfully marked
+  function minesMarked(){
+    for (var j=0; j < board.cells.length; j++){
+        if( (board.cells[j].isMine === true) && (board.cells[j].isMarked === true) ){
           minesFound += 1;
         }
-        //if the user flags a cell that doesn't contain a mine, then this is counted a falseMine.
+      }
+  }
+
+
+  // Counts the number of false flags on cells that aren't mines
+  function falseMineCounter(){
+    for (var k=0; k < board.cells.length; k++){
         if( (board.cells[k].isMine === false) && (board.cells[k].isMarked === true) ){
-          falseMine += 1;
+          falseMines += 1;
         }
       }
+  }
 
-      //if the number of minesFound equals the numer of mines, and the number of falseMine's equal 0 then the user wins.
-      if ( (minesFound == numberOfMines) && (falseMine == 0) ){
-        lib.displayMessage('You win!')
+  // Counts the numer of visable cells
+  function visableCellsCounter(){
+    for (var l=0; l < board.cells.length; l++){
+        if( (board.cells[l].isMine === false) && (board.cells[l].hidden === false) ){
+          visableCells += 1;
+        }
       }
   }
 
-  //function that will work out the how many cells need to be visable for the user to win. It will count the number of visable squares, if it equals the winning number of squares, then the user will win.
-  function checkVisable(){
-    var winningNumber = (board.cells.length - numberOfMines);
-    var numberOfVisable = 0;
-    for (var k=0; k < board.cells.length; k++){
-      if( (board.cells[k].isMine == false) && (board.cells[k].hidden === false) ){
-        numberOfVisable += 1;
-      }
-    }
 
-    if ( (numberOfVisable == winningNumber) && (minesFound == numberOfMines) ) {
-        lib.displayMessage('You win!')
-    }
+  mineCounter();
+  minesMarked();
+  falseMineCounter();
+  visableCellsCounter();
 
+  // Evaluates the win condition
+  if ( (falseMines == 0) && (minesFound == numberOfMines) && (visableCells == (board.cells.length - numberOfMines)) ){
+    lib.displayMessage('You win!');
   }
 
-  getNumberOfMines();
-  checkVisable();
-  markedMines();
 
   // You can use this function call to declare a winner (once you've
   // detected that they've won, that is!)
