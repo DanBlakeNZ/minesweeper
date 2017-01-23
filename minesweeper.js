@@ -18,11 +18,66 @@ function startGame () {
   lib.initBoard()
 }
 
+  document.addEventListener('click', function(){
+    checkForWin()
+  });
+
+  document.addEventListener('contextmenu', function(){
+    checkForWin()
+  });
+
 // Define this function to look for a win condition:
 //
 // 1. Are all of the cells that are NOT mines visible?
 // 2. Are all of the mines marked?
 function checkForWin () {
+
+  //variable that holds the number of mines
+  var numberOfMines = 0;
+
+  //function that counts the number of mines on the board and returns it to the numberOfMines variable.
+  function getNumberOfMines(){
+      for (var k=0; k < board.cells.length; k++){
+        if(board.cells[k].isMine === true){
+          numberOfMines += 1;
+        }
+      }
+  }
+
+  //Function that counts how many mines have been found. If a cell is a mine and is marked, then the minesFound variable increases.
+  function markedMines(){
+      var minesFound = 0;
+      for (var k=0; k < board.cells.length; k++){
+        if( (board.cells[k].isMine === true) && (board.cells[k].isMarked === true) ){
+          minesFound += 1;
+        }
+      }
+
+      //if the number of minesFound equals the numer of mines, then the user wins
+      if (minesFound == numberOfMines){
+        lib.displayMessage('You win!')
+      }
+  }
+
+  //function that will work out the how many cells need to be visable for the user to win. It will count the number of visable squares, if it equals the winning number of squares, then the user will win.
+  function checkVisable(){
+    var winningNumber = (board.cells.length - numberOfMines);
+    var numberOfVisable = 0;
+    for (var k=0; k < board.cells.length; k++){
+      if( (board.cells[k].isMine != true) && (board.cells[k].hidden === false) ){
+        numberOfVisable += 1;
+      }
+    }
+
+    if (numberOfVisable == winningNumber){
+      lib.displayMessage('You win!')
+    }
+
+  }
+
+  getNumberOfMines();
+  checkVisable();
+  markedMines();
 
   // You can use this function call to declare a winner (once you've
   // detected that they've won, that is!)
