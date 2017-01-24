@@ -14,6 +14,7 @@ var board = {
 // function that creates the board
 function boardSetUp(){
 
+// Variables that will keep track of the board size and the layout of the rows and cells.
   var numberOfCells = 0;
   var userBoardSize = 0;
   var rowCounter = 0;
@@ -22,19 +23,22 @@ function boardSetUp(){
   var colNumber = 1;
 
 // Prompt that asks the user to enter the board size
-  userBoardSize = prompt("Please enter the size of the board. This must be between 3 and 6.", 3);
+  userBoardSize = prompt("Please enter the size of the board. This must be between 4 and 6.", 4);
 
 // Loop used to validate the board size, will only run if the user enters an invalid board size.
-  while ( (userBoardSize < 3) || (userBoardSize > 6) ){
-    userBoardSize = prompt("Sorry, I can't make a board that size, the board size must be between 3 and 6.", 3);
+  while ( (userBoardSize < 4) || (userBoardSize > 6) ){
+    userBoardSize = prompt("Sorry, I can't make a board that size, the board size must be between 4 and 6.", 3);
   }
 
   // Calculates the numer of cells required based on the user's input.
   numberOfCells = (userBoardSize * userBoardSize);
 
-// A For loop that will create each cell of the board. It uses variables that keep track of the number of rows and columns required, and inserts the revlevent values
+  // A For loop that will create each cell of the board. It uses variables that keep track of the number of rows and columns required, and inserts the revlevent values
   for (var i = 0; i < numberOfCells; i++){
+    // A new cell object is created.
     board.cells[i] = new Object();
+    // Every cell stats off hidden.
+    board.cells[i].hidden = true;
 
     //  Adds a row number to each cell Object and keeps track of how many objects on that row.
     if (rowCounter <= userBoardSize){
@@ -42,7 +46,7 @@ function boardSetUp(){
       rowCounter ++;
     }
 
-    // If the row is longer than it should be, then a new row is created and the count for that row starts over
+      // If the row is longer than it should be, then a new row is created and the count for that row starts over
     if (rowCounter > userBoardSize){
       rowNumber ++;
       rowCounter = 1;
@@ -64,19 +68,29 @@ function boardSetUp(){
       colNumber ++
     }
 
-    board.cells[i].isMine = false;
-    board.cells[i].hidden = true;
+    //Randomally puts a mine in the cell, or not
+    board.cells[i].isMine = mineCreator();
 
+    // Random number generator for creating a mine
+    function mineCreator(){
+      var number = Math.random();
+        if (number < 0.18) {
+          return true;
+        }
+        if (number > 0.18) {
+          return false;
+        }
+      }
+    }
   }
-
-}
-
-boardSetUp();
 
 
 
 
 function startGame () {
+
+  boardSetUp();
+
   for(var i=0; i < board.cells.length; i++){
     board.cells[i].surroundingMines = countSurroundingMines(board.cells[i]);
   }
