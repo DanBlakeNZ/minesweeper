@@ -3,12 +3,78 @@ document.addEventListener('DOMContentLoaded', startGame)
 // Define your `board` object here!
 var board = {
   cells:[
-          {row:1, col:1, isMine:true, hidden:true},{row:1, col:2, isMine:false, hidden:true},{row:1, col:3, isMine:false, hidden:true},{row:1, col:4, isMine:false, hidden:true},
-          {row:2, col:1, isMine:false, hidden:true},{row:2, col:2, isMine:false, hidden:true},{row:2, col:3, isMine:false, hidden:true},{row:2, col:4, isMine:false, hidden:true},
-          {row:3, col:1, isMine:false, hidden:true},{row:3, col:2, isMine:false, hidden:true},{row:3, col:3, isMine:false, hidden:true},{row:3, col:4, isMine:true, hidden:true},
-          {row:4, col:1, isMine:false, hidden:true},{row:4, col:2, isMine:false, hidden:true},{row:4, col:3, isMine:true, hidden:true},{row:4, col:4, isMine:false, hidden:true}
+          // {row:1, col:1, isMine:false, hidden:true},{row:1, col:2, isMine:false, hidden:true},{row:1, col:3, isMine:false, hidden:true},{row:1, col:4, isMine:false, hidden:true},
+          // {row:2, col:1, isMine:false, hidden:true},{row:2, col:2, isMine:false, hidden:true},{row:2, col:3, isMine:false, hidden:true},{row:2, col:4, isMine:false, hidden:true},
+          // {row:3, col:1, isMine:false, hidden:true},{row:3, col:2, isMine:false, hidden:true},{row:3, col:3, isMine:false, hidden:true},{row:3, col:4, isMine:false, hidden:true},
+          // {row:4, col:1, isMine:false, hidden:true},{row:4, col:2, isMine:false, hidden:true},{row:4, col:3, isMine:false, hidden:true},{row:4, col:4, isMine:false, hidden:true}
         ]
 }
+
+
+// function that creates the board
+function boardSetUp(){
+
+  var numberOfCells = 0;
+  var userBoardSize = 0;
+  var rowCounter = 0;
+  var rowNumber = 1;
+  var colCounter = 0;
+  var colNumber = 1;
+
+// Prompt that asks the user to enter the board size
+  userBoardSize = prompt("Please enter the size of the board. This must be between 3 and 6.", 3);
+
+// Loop used to validate the board size, will only run if the user enters an invalid board size.
+  while ( (userBoardSize < 3) || (userBoardSize > 6) ){
+    userBoardSize = prompt("Sorry, I can't make a board that size, the board size must be between 3 and 6.", 3);
+  }
+
+  // Calculates the numer of cells required based on the user's input.
+  numberOfCells = (userBoardSize * userBoardSize);
+
+// A For loop that will create each cell of the board. It uses variables that keep track of the number of rows and columns required, and inserts the revlevent values
+  for (var i = 0; i < numberOfCells; i++){
+    board.cells[i] = new Object();
+
+    //  Adds a row number to each cell Object and keeps track of how many objects on that row.
+    if (rowCounter <= userBoardSize){
+      board.cells[i].row = rowNumber;
+      rowCounter ++;
+    }
+
+    // If the row is longer than it should be, then a new row is created and the count for that row starts over
+    if (rowCounter > userBoardSize){
+      rowNumber ++;
+      rowCounter = 1;
+      board.cells[i].row = rowNumber;
+    }
+
+    // Adds a column number to each object and keeps track of how many objects are part of that column
+    if (colCounter <= userBoardSize){
+      board.cells[i].col = colNumber;
+      colNumber ++;
+      colCounter ++;
+    }
+
+    // If the column is longer than it should be, then a new column count is reset and starts again.
+    if (colCounter > userBoardSize){
+      colCounter = 1;
+      colNumber = 1;
+      board.cells[i].col = colNumber;
+      colNumber ++
+    }
+
+    board.cells[i].isMine = false;
+    board.cells[i].hidden = true;
+
+  }
+
+}
+
+boardSetUp();
+
+
+
 
 function startGame () {
   for(var i=0; i < board.cells.length; i++){
